@@ -21,6 +21,14 @@ module FontAssets
     end
 
     def call(env)
+      if font_asset?(env["PATH_INFO"])
+        dup._call(env)
+      else
+        @app.call(env)
+      end
+    end
+
+    def _call(env)
       @ssl_request = Rack::Request.new(env).scheme == "https"
       # intercept the "preflight" request
       if env["REQUEST_METHOD"] == "OPTIONS"

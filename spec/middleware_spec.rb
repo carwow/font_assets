@@ -157,8 +157,21 @@ describe FontAssets::Middleware do
       subject { response[2] }
       it { should be_empty }
     end
-  end
 
+    context 'to non-font assets' do
+      let(:response) { request app, '/', :method => 'OPTIONS' }
+
+      context 'the response headers' do
+        subject { response[1] }
+
+        its(["Access-Control-Allow-Headers"]) { should be_nil }
+        its(["Access-Control-Max-Age"]) { should be_nil }
+        its(['Access-Control-Allow-Methods']) { should be_nil }
+        its(['Access-Control-Allow-Origin']) { should be_nil }
+        its(['Content-Type']) { should == 'text/plain' }
+      end
+    end
+  end
 
   private
 
